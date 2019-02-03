@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.swp
+
+pcap_web_analyzer/temp/*.pcap
+pcap_web_analyzer/db.sqlite3
 
 # C extensions
 *.so

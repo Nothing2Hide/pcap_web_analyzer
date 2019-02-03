@@ -1,0 +1,8 @@
+Django==2.1.5
+django-webpack-loader==0.6.0
+django-cors-headers==2.4.0
+Celery==4.2.1
+redis==3.1.0
+celery[redis]
+pcapanalysis==0.1
+pymisp==2.4.101
