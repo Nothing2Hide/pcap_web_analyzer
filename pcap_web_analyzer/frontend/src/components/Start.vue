@@ -1,22 +1,51 @@
-<!-- App.vue -->
-
 <!-- HTML Template -->
 <template>
-  <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-    <h1>Upload a PCAP file</h1>
-    <div class="dropbox">
-      <label>File
-        <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" accept=".pcap,.pcap-ng"/>
-      </label>
-      <button v-on:click="submitFile()">Submit</button>
-      <p v-if="isInitial">
-        Drag your file(s) here to begin<br> or click to browse
-      </p>
-      <p v-if="isSaving">
-      Uploading files...
-      </p>
-    </div>
-  </form>
+  <v-container fluid>
+    <v-layout row>
+      <v-flex xs10 offset-xs1 md6 offset-md3>
+        <v-stepper v-model="e1">
+          <v-stepper-header>
+            <v-stepper-step :complete="e1 > 1" step="1">PCAP Upload</v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step :complete="e1 > 2" step="2">Analysis</v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step step="3">Results</v-stepper-step>
+          </v-stepper-header>
+          <v-stepper-items>
+            <v-stepper-content step="1">
+                <h1>Upload a PCAP file</h1>
+                <v-text-field label="Select PCAP" @click='pickFile' v-model='fileName' prepend-icon='attach_file'></v-text-field>
+                <input
+						type="file"
+                        id="file"
+						style="display: none"
+						ref="file"
+						accept=".pcap,.pcap-ng"
+						@change="handleFileUpload"
+					>
+                    <center><v-btn color="info" v-on:click="submitFile()">Submit</v-btn></center>
+                    <div v-if="isSaving">
+
+                      <v-progress-linear v-model="uploadPercentage"></v-progress-linear>
+                    </div>
+            </v-stepper-content>
+            <v-stepper-content step="2">
+              <h1>Analysis In Progress</h1>
+              <div class="text-xs-center">
+                <v-progress-circular
+                  :size="50"
+                  color="primary"
+                  indeterminate
+                ></v-progress-circular>
+              </div>
+            </v-stepper-content>
+            <v-stepper-content step="3">
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <!-- Javascript -->
@@ -31,9 +60,14 @@ export default {
   data () {
     return {
       file: '',
+      fileName: '',
       uploadError: null,
       currentStatus: null,
-      uid: null
+      uid: null,
+      e1: 1,
+      result: '',
+      alerts: [],
+      uploadPercentage: 0
     }
   },
   computed: {
@@ -58,35 +92,73 @@ export default {
       this.uploadError = null
       this.uid = null
     },
-    handleFileUpload () {
-      this.file = this.$refs.file.files[0]
+    pickFile () {
+      this.$refs.file.click ()
+    },
+    handleFileUpload (e) {
+      const files = e.target.files
+      if(files[0] !== undefined) {
+        this.fileName = files[0].name
+        this.file = files[0]
+      } else {
+        this.fileName = ''
+        this.file = ''
+      }
     },
     submitFile () {
-      // Create a new file
-      this.currentStatus = STATUS_SAVING
-      axios
-        .get('http://127.0.0.1:8000/analysis/new')
-        .then(response => (this.uploadFile(response['data']['id'])))
+      if (this.file != '') {
+        // Create a new file
+        axios
+          .get('/analysis/new')
+          .then(response => (this.uploadFile(response['data']['id'])))
+      }
     },
     uploadFile (uid) {
-      console.log(uid)
       this.uid = uid
+      this.currentStatus = STATUS_SAVING
       let formData = new FormData()
       formData.append('file', this.file)
-      axios.post('http://127.0.0.1:8000/analysis/' + uid + '/upload',
+      axios.post('/analysis/' + uid + '/upload',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
-          }
+          },
+          onUploadProgress: function( progressEvent ) {
+            this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
+          }.bind(this)
         }
-      ).then((response) => {
-        this.$router.push({ path: '/analysis/' + uid })
+      ).then(() => {
+        this.e1 = 2
+        this.checkAnalysis()
       })
         .catch(function () {
           // TODO: redirect to error here
           this.currentStatus = STATUS_FAILED
         })
+    },
+    checkAnalysis() {
+      axios
+      .get('/analysis/' + this.uid)
+      .then((response) => {
+        if (response['data']['status'] == 'AnalysisStatus.INDICATOR'){
+          if (this.e1 == 1){
+            this.e1 == 2
+          }
+          setTimeout(this.checkAnalysis, 2000);
+        } else if (response['data']['status'] == 'AnalysisStatus.SEARCH'){
+          if (this.e1 == 1){
+            this.e1 == 2
+          }
+          setTimeout(this.checkAnalysis, 2000);
+        } else if (response['data']['status'] == 'AnalysisStatus.DONE') {
+          var pcaps = JSON.parse(this.$localStorage.get('pcaps', []))
+          pcaps.push(response['data'])
+          this.$localStorage.set('pcaps', JSON.stringify(pcaps));
+          this.$router.push({ path: '/analysis/' + this.uid })
+        }
+      }
+      )
     }
   },
   mounted () {

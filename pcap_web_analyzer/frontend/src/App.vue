@@ -1,23 +1,49 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-  </div>
+  <v-app>
+    <v-content>
+      <v-container id="container">
+        <v-toolbar dark color="primary" app>
+          <v-toolbar-title class="headline text-uppercase">
+            <router-link to="/" class="toolbar-title">
+              <span class="nicelink">PCAP ANALYZER</span>
+            </router-link>
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn
+            flat
+            href="https://github.com/Te-k/pcap_web_analyzer"
+            target="_blank"
+          >
+            <span class="mr-2">Latest Release</span>
+          </v-btn>
+        </v-toolbar>
+
+        <v-content>
+          <router-view/>
+        </v-content>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+  },
+  data () {
+    return {
+    }
+  },
+  mounted() {
+  }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.nicelink {
+  color: #fff;
+  text-decoration:none;
 }
 </style>

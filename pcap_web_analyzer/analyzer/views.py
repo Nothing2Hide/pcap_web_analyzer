@@ -7,12 +7,8 @@ from datetime import datetime
 import string
 import random
 from .forms import UploadFileForm
-from .models import Analysis, AnalysisStatus, AnalysisResult
+from .models import Analysis, AnalysisStatus, AnalysisResult, Alert
 from .tasks import pcap_analysis
-
-# Create your views here.
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
 
 def analysis_new(request):
     # FIXME: protect this page a bit , too many objects created all over the place
@@ -54,15 +50,17 @@ def analysis_upload(request, analysis_id):
 
 def analysis_show(request, analysis_id):
     """
-    /analysi/UID
+    /analysis/UID
     Returns information on the analysis
     """
     analysis = get_object_or_404(Analysis, pk=analysis_id)
+    alerts = Alert.objects.filter(analysis=analysis)
     res = {
         'id': analysis.analysis_id,
         'created': analysis.created,
         'status': analysis.status,
-        'result': analysis.result
+        'result': analysis.result,
+        'alerts': [{'indicator': a.indicator, 'event': a.event_name} for a in alerts]
     }
     return JsonResponse(res)
 

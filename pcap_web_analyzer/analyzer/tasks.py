@@ -8,11 +8,6 @@ import subprocess
 
 
 @shared_task
-def add(x, y):
-    return x + y
-
-
-@shared_task
 def pcap_analysis(analysis_id):
     """
     Analyze the pcap file, first extract the IOCs then check in the MISP server
@@ -28,8 +23,8 @@ def pcap_analysis(analysis_id):
         pc.extract_indicators()
         analysis.status = AnalysisStatus.SEARCH
         analysis.save()
+        print('Searching for %i indicators' % len(pc.indicators))
         for ind in pc.indicators:
-            print(ind)
             events = server.search(values = [ind['value']])
             if len(events['response']) > 0:
                 malicious = True
@@ -64,5 +59,3 @@ def pcap_analysis(analysis_id):
         '-zu',
         settings.TEMP_FOLDER + '/' + analysis_id + '.pcap']
     )
-
-    # TODO: delete the pcap file securely
