@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from datetime import datetime
+from django.utils import timezone
 import string
 import random
 from .forms import UploadFileForm
@@ -11,14 +11,13 @@ from .models import Analysis, AnalysisStatus, AnalysisResult, Alert
 from .tasks import pcap_analysis
 
 def analysis_new(request):
-    # FIXME: protect this page a bit , too many objects created all over the place
+    # TODO: protect this page a bit , too many objects created all over the place
     # Create a random id
     new_uid = ''.join([random.choice(string.ascii_lowercase + string.digits) for _ in range(64)])
     # Create a new Analysis
     new_analysis = Analysis()
     new_analysis.analysis_id = new_uid
-    # FIXME: datetime is without timezone here
-    new_analysis.created = datetime.now()
+    new_analysis.created = timezone.now()
     new_analysis.status = AnalysisStatus.UPLOAD
     new_analysis.save()
     # TODO: save the IP address ?
@@ -57,11 +56,9 @@ def analysis_show(request, analysis_id):
     alerts = Alert.objects.filter(analysis=analysis)
     res = {
         'id': analysis.analysis_id,
-        'created': analysis.created,
+        'created': timezone.localtime(analysis.created).strftime("%Y-%m-%d %H:%M:%S"),
         'status': analysis.status,
         'result': analysis.result,
         'alerts': [{'indicator': a.indicator, 'event': a.event_name} for a in alerts]
     }
     return JsonResponse(res)
-
-    pass

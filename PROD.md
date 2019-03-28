@@ -21,6 +21,7 @@ I will use gunicorn as a local web server, and requests proxied either from Ngin
     * Update `Debug` to False
     * Update `ALLOWED_HOSTS`
     * Update `DATABASES`
+    * Update `TIME_ZONE`
     * Update `MISP_SERVER` and `MISP_KEY`
 
 ### Set-up gunicorn

@@ -28,8 +28,8 @@
         >
           <template v-slot:items="props">
             <td>{{ props.item.created }}</td>
-            <td class="text-xs-right"> <v-chip v-if="props.item.result == 'AnalysisResult.MALICIOUS'" color="red" text-color="white">Malicious</v-chip><v-chip v-if="props.item.result == 'AnalysisResult.NOTHING'" color="green" text-color="white">Nothing Found</v-chip><v-chip label v-if="props.item.result == 'AnalysisResult.ERROR'">Error</v-chip></td>
-            <td class="text-xs-right"><router-link :to="{name: 'Analysis', params: { id: props.item.id }}">Result</router-link></td>
+            <td class="text-xs-left"> <v-chip v-if="props.item.result == 'AnalysisResult.MALICIOUS'" color="red" text-color="white">Malicious</v-chip><v-chip v-if="props.item.result == 'AnalysisResult.NOTHING'" color="green" text-color="white">Nothing Found</v-chip><v-chip label v-if="props.item.result == 'AnalysisResult.ERROR'">Error</v-chip></td>
+            <td class="text-xs-left"><router-link :to="{name: 'Analysis', params: { id: props.item.id }}">Result</router-link></td>
           </template>
         </v-data-table>
         </div>
