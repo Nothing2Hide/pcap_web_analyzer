@@ -43,7 +43,7 @@ export default {
   name: 'Home',
   data () {
     return {
-      pcaps: null,
+      pcaps: [],
       headers: [
         {text: 'Created', value: 'created'},
         {text: 'Result', value: 'result'},

@@ -13,7 +13,7 @@ from .tasks import pcap_analysis
 def analysis_new(request):
     # FIXME: protect this page a bit , too many objects created all over the place
     # Create a random id
-    new_uid = ''.join(random.choices(string.ascii_lowercase + string.digits, k=64))
+    new uid = ''.join([random.choice(string.ascii_lowercase + string.digits) for _ in range(64)])
     # Create a new Analysis
     new_analysis = Analysis()
     new_analysis.analysis_id = new_uid

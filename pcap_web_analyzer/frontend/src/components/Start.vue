@@ -20,7 +20,7 @@
                         id="file"
 						style="display: none"
 						ref="file"
-						accept=".pcap,.pcap-ng"
+						accept=".pcap,.pcap-ng,.pcapng"
 						@change="handleFileUpload"
 					>
                     <center><v-btn color="info" v-on:click="submitFile()">Submit</v-btn></center>
