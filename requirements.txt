@@ -4,5 +4,5 @@ django-cors-headers==2.4.0
 Celery==4.2.1
 redis==3.1.0
 celery[redis]
-pcapanalysis==0.1
+pcapanalysis==0.1.2
 pymisp==2.4.101
