@@ -42,8 +42,4 @@ export default {
 </script>
 
 <style>
-.nicelink {
-  color: #fff;
-  text-decoration:none;
-}
 </style>
