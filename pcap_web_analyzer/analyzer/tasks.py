@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from django.conf import settings
 from celery import shared_task
-from pcapanalysis import Pcap
+from pcap_ioc import Pcap
 from pymisp import PyMISP, PyMISPError
 from .models import Analysis, AnalysisStatus, AnalysisResult, Alert
 import subprocess

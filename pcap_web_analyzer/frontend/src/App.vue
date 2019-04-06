@@ -11,7 +11,7 @@
           <v-spacer></v-spacer>
           <v-btn
             flat
-            href="https://github.com/Te-k/pcap_web_analyzer"
+            href="https://github.com/Nothing2Hide/pcap_web_analyzer"
             target="_blank"
           >
             <span class="mr-2">Latest Release</span>

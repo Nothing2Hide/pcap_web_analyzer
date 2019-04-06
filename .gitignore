@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.swp
 
+pcap_web_analyzer/public/
 pcap_web_analyzer/temp/*.pcap
 pcap_web_analyzer/db.sqlite3
 

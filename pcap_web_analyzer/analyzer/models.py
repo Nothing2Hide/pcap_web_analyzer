@@ -20,11 +20,11 @@ class Analysis(models.Model):
     analysis_id = models.CharField(max_length=64, primary_key=True)
     created = models.DateTimeField('date created')
     status = models.CharField(
-            max_length=10,
+            max_length=25,
             choices=[(tag, tag.value) for tag in AnalysisStatus]
     )
     result = models.CharField(
-        max_length=10,
+        max_length=25,
         choices=[(tag, tag.value) for tag in AnalysisResult]
     )
     ip = models.CharField(max_length=255)

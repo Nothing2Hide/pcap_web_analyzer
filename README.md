@@ -1,13 +1,23 @@
 # pcap_web_analyzer
 
-Web interface to analyze pcap files looking for malicious indicators
+Web interface to analyze pcap files looking for malicious indicators from a MISP instance.
 
-## Install
+This web application allows to upload pcap and pcap-ng files and :
+* Extract indicators using `pcap_ioc`
+* Search for these indicators in a MISP instance using `pymisp`
+* Delete securely the pcap file
+* Return a result (Nothing found, or malicious)
+
+## Development
+
+Installation:
 
 * Install redis, see https://redis.io/topics/quickstart
 * Install `shred`
+* Install requirements : `pip install -r requirements.txt`
+* Locally install the npm packages with `npm install` in `pcap_web_analyzer/frontend`
 
-## Run the app in development
+Run the app :
 
 * Launch django : `python manage.py runserver`
 * Lanch the vuejs vue, in `frontend` : `npm run serve`
@@ -15,15 +25,14 @@ Web interface to analyze pcap files looking for malicious indicators
 
 Visit http://localhost:8080/ or http://localhost:8000/admin/
 
-## TODO
+## Run the application in production
 
-* Work on the view
-    * Keep history of the files uploaded
-    * Try with large files
-* Delete the CORS plugin
-* Track MISP errors
-* Add an object to log analysis -> time + success
+See [the production instructions](PROD.md).
 
-# LICENSE
+## Limitatiions
 
-MIT
+This application is just looking for know malicious indicators in the PCAP files and won't find any unknown malicious acitivity. The detection is just as good as the indicators in the MISP instance.
+
+## LICENSE
+
+This software is released under the MIT license.
